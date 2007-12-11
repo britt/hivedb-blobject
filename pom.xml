@@ -23,7 +23,8 @@
   	<finalName>blobject</finalName>
     <testResources>
       <testResource>
-        <directory>src/test/resources</directory>
+      	<targetPath>org/hivedb/serialization</targetPath>
+        <directory>src/test/java/org/hivedb/serialization</directory>
       </testResource>
     </testResources>
   	<plugins>

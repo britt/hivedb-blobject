@@ -4,9 +4,16 @@
   <groupId>org.hivedb</groupId>
   <artifactId>blobject</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>blobject</name>
   <url>http://maven.apache.org</url>
+  <distributionManagement>
+    <repository>
+      <id>HiveDB</id>
+      <name>HiveDB Repository</name>
+      <url>scp://svn.hivedb.org/home/hivedb/public_html/hivedb.org/maven</url>
+    </repository>
+  </distributionManagement>
   <dependencies>
     <dependency>
       <groupId>org.hivedb</groupId>

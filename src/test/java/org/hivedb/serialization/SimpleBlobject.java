@@ -10,7 +10,7 @@ import org.hivedb.annotations.Resource;
 import org.hivedb.util.HiveUtils;
 import org.hivedb.util.database.test.WeatherReportImpl;
 
-@Resource(name="Blobject")
+@Resource("Blobject")
 public class SimpleBlobject extends Blobject {
 	private Integer id;
 	private String mapped;
@@ -32,7 +32,7 @@ public class SimpleBlobject extends Blobject {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	// Just because ClassDaoServiceTest needs all of its entities within the same PartitionDImension
+
 	@PartitionIndex
 	public String getMapped() {
 		return mapped;

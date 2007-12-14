@@ -11,40 +11,39 @@ public interface ClassXmlTransformer<T> {
 	 *  Returns the current version of the XML blob for this class. XML retrieved of o
 	 * @return
 	 */
-	public Integer getCurrentXmlVersion();
+	Integer getCurrentXmlVersion();
 
-	public PropertiesAccessor getPropertiesAccessor(final Object instance);
+	PropertiesAccessor getPropertiesAccessor(final Object instance);
 	
-	String abbreviate(String name);
-	public String elongate(String abbreviatedName);
-	
+	String abbreviate(String propertyName);
+	String getClassAbbreviation();
 	/**
 	 *  The interface transformed by the transformer.
 	 * @return
 	 */
-	public Class<T> getRespresentedInterface();
+	Class<T> getRespresentedInterface();
 	/**
 	 *  Returns a new instance of the transformed class to be populated during deserialization
 	 * @return
 	 */
-	public T createInstance();
+	T createInstance();
 	/**
 	 *  Optionally wraps an instance of the transformed interface in the actual implementation used for serialization. 
 	 * @param instance
 	 * @return
 	 */
-	public T wrapInSerializingImplementation(T instance);
+	T wrapInSerializingImplementation(T instance);
 	/**
 	 *  Return a collection of the required transformer instnaces, including an instance of this
 	 *  implementing class. If this class has no dependencies, the list will only have one element--
 	 *  and instance of this class.
 	 * @return
 	 */
-	public Collection<ClassXmlTransformer> getRequiredTransformers();
+	Collection<ClassXmlTransformer> getRequiredTransformers();
 	/**
 	 *  Returns an object that knows how to modernize any version of a serialized object to the modern version
 	 * @return
 	 */
-	public Modernizer<T> getModernizer(Integer fromVersion, Integer toVersion);
+	Modernizer<T> getModernizer(Integer fromVersion, Integer toVersion);
 
 }

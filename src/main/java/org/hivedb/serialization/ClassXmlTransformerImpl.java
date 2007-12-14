@@ -25,6 +25,7 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 	private Class<T> representedInterface;
 	private Map<String,String> abbrevationMap;
 	private Map<String,String> elongationMap;
+	private String classAbbreviation;
 	@SuppressWarnings("unchecked")
 	public ClassXmlTransformerImpl(Class<T> representedInterface) {
 		this.representedInterface = representedInterface;
@@ -32,10 +33,11 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 		this.xmlModernizationPaver = new XmlModernizationPaverImpl(this, 1, new Hashtable<Modernizer,Modernizer>());
 		this.abbrevationMap = createAbbreviationMap(
 			representedInterface, 
-			Transform.flatten(
-				(Collection<String>)Collections.singletonList(representedInterface.getSimpleName().toLowerCase()), 
-				(Collection<String>)ReflectionTools.getPropertiesOfGetters(representedInterface)));
+			ReflectionTools.getPropertiesOfGetters(representedInterface));
 		this.elongationMap = Transform.reverseMap(abbrevationMap);
+		this.classAbbreviation = abbreviate(
+			representedInterface,
+			representedInterface.getSimpleName().toLowerCase());
 	}
 	
 	public ClassXmlTransformerImpl(XmlModernizationPaver<T> memberXmlModernizationPaver) {
@@ -60,11 +62,11 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 		}
 	};	  
 	
-	public final String abbreviate(String name) {
-		return abbrevationMap.get(name);
+	public final String abbreviate(String propertyName) {
+		return abbrevationMap.get(propertyName);
 	}
-	public final String elongate(String name) {
-		return elongationMap.get(name);
+	public final String getClassAbbreviation() {
+		return classAbbreviation;
 	}
 	
 	// Use a simple abbreviation strategy to abbreviate the collection of names.
@@ -81,7 +83,7 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 			}, names),
 			new MapToValueFunction<String,String>()));
 		if (abbreviationMap.size() != names.size())
-			throw new RuntimeException(String.format("Interface %s properties cannot be abbreviated. The following properties have abbreviates in use by another property %s",
+			throw new RuntimeException(String.format("Interface %s properties cannot be abbreviated. The following properties have abbreviations in use by another property %s",
 					representedInterface.getSimpleName(),
 					Filter.grepFalseAgainstList(abbreviationMap.keySet(),names)));
 		return abbreviationMap;

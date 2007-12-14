@@ -45,7 +45,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 		for (ClassXmlTransformer<Object> classXmlTransformer : classXmlTransformerMap.values()) {
 			xStream.registerConverter(new ClassConverter(classXmlTransformer));
 			Object instancePrototype = classXmlTransformer.createInstance();
-			xStream.alias(classXmlTransformer.abbreviate(classXmlTransformer.getRespresentedInterface().getSimpleName().toLowerCase()), instancePrototype.getClass());
+			xStream.alias(classXmlTransformer.getClassAbbreviation(), instancePrototype.getClass());
 		}
 	}
 	

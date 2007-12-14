@@ -1,6 +1,7 @@
 package org.hivedb.serialization;
 
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.hivedb.annotations.EntityId;
@@ -45,6 +46,15 @@ public class SimpleBlobject extends Blobject {
 	public void setNotMapped(Date notMapped) {
 		this.notMapped = notMapped;
 	}
+	
+	private Collection<Foo> foos;
+	public Collection<Foo> getFoos() {
+		return foos;
+	}
+	
+	public void setFoos(Collection<Foo> foos) {
+		this.foos = foos;
+	}	
 	
 	
 	@Override

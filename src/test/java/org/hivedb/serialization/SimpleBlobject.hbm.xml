@@ -6,7 +6,13 @@
 	<class name="SimpleBlobject" table="BLOBJECT">
 		<id name="id" column="ID"/>
         <property name="mapped" column="MAPPED"/>
-        <join table="BLOBJECT_BLOB">
+        
+        <bag name="foos" lazy="false" table="BLOBJECT_FOO" access="org.hivedb.serialization.ExtractPrimitiveAccessor" >
+      	  <key column="ID"/>
+          <element type="integer" column="FOO_ID"/>
+		</bag>
+		
+		<join table="BLOBJECT_BLOB">
         	<key column="ID" />
         	<property name="blob" access="org.hivedb.serialization.BlobAccessor" lazy="false" column="DATA"/>
         </join>

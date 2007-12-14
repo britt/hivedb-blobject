@@ -26,7 +26,12 @@ public class SimpleBlobjectSchema extends Schema {
 				"BLOBJECT_BLOB", 
 				"CREATE TABLE BLOBJECT_BLOB (" + 
 				"ID INT NOT NULL PRIMARY KEY, " + 
-				"DATA BLOB);")
+				"DATA BLOB);"),
+			new TableInfo(
+					"BLOBJECT_FOO", 
+					"CREATE TABLE BLOBJECT_FOO (" + 
+					"ID INT NOT NULL, " + 
+					"FOO_ID INT NOT NULL);")
 		);
 	}
 

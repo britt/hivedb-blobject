@@ -8,10 +8,12 @@ import org.hivedb.Schema;
 import org.hivedb.meta.persistence.TableInfo;
 
 public class SimpleBlobjectSchema extends Schema {
-	public SimpleBlobjectSchema(){}
+	public SimpleBlobjectSchema(){
+		super("blobject");
+	}
 	
 	public SimpleBlobjectSchema(String dbURI) {
-		super(dbURI);
+		super("blobject",dbURI);
 	}
 
 	@Override

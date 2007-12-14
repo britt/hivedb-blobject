@@ -8,7 +8,6 @@ import org.hivedb.annotations.EntityId;
 import org.hivedb.annotations.PartitionIndex;
 import org.hivedb.annotations.Resource;
 import org.hivedb.util.HiveUtils;
-import org.hivedb.util.database.test.WeatherReportImpl;
 
 @Resource("Blobject")
 public class SimpleBlobject extends Blobject {

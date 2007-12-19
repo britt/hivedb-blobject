@@ -11,29 +11,24 @@ import org.hivedb.util.functional.NumberIterator;
 import org.hivedb.util.functional.Predicate;
 import org.hivedb.util.functional.Transform;
 
-public class XmlModernizationPaverImpl<T>  implements XmlModernizationPaver {
-	private ClassXmlTransformer<T> classXmlTransformer;
+public class XmlModernizationPaverImpl<T>  implements XmlModernizationPaver<T> {
 	private Integer currentXmlVersion;
 	private Map<Integer,Modernizer<T>> modernizerMap;
-	public XmlModernizationPaverImpl(
-			ClassXmlTransformer<T> classXmlTransformer, 
+	public XmlModernizationPaverImpl(	 
 			Integer currentXmlVersion,
 			Map<Integer,Modernizer<T>> modernizerMap)
 	{
-		this.classXmlTransformer = classXmlTransformer;
 		this.currentXmlVersion = currentXmlVersion;
 		this.modernizerMap = modernizerMap;
 	}
 	
-	public XmlModernizationPaverImpl(
-			ClassXmlTransformer<T> classXmlTransformer, 
-			Integer currentXmlVersion)
+	public XmlModernizationPaverImpl(Integer currentXmlVersion)
 	{
-		this(classXmlTransformer, currentXmlVersion, new Hashtable<Integer,Modernizer<T>>());
+		this(currentXmlVersion, new Hashtable<Integer,Modernizer<T>>());
 	}
 	
-	protected ClassXmlTransformer<T> getClassXmlTransformer() {
-		return classXmlTransformer;
+	public static <T> XmlModernizationPaverImpl<T> getDefaultXmlModernizationPaver() {
+		return new XmlModernizationPaverImpl<T>((Integer)1, new Hashtable<Integer,Modernizer<T>>());
 	}
 	
 	public Modernizer<T> getModernizer(Integer fromVersion, Integer toVersion) {

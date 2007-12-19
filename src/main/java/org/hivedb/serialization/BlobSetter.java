@@ -40,6 +40,8 @@ public class BlobSetter implements Setter {
 			ReflectionTools.whichIsImplemented(
 					(Class)defrosted.getClass(), 
 					(Collection<Class>)XmlXStreamSerializationProvider.instance().getSerializableInterfaces());
+		if (clazz == null)
+			throw new RuntimeException(String.format("Could not find a serializable interface matching defrosted class %s", defrosted.getClass()));
 		for(Method get : ReflectionTools.getGetters(clazz)) {
 			if(get.getDeclaringClass().equals(Object.class))
 				continue;

@@ -1,13 +1,14 @@
   package org.hivedb.serialization;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.hivedb.util.GenerateInstance;
+import org.hivedb.util.GeneratedInstanceInterceptor;
 import org.hivedb.util.PropertiesAccessor;
 import org.hivedb.util.PropertiesAccessorForPropertySetter;
 import org.hivedb.util.PropertySetter;
@@ -22,43 +23,38 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 
 	private XmlModernizationPaver<T> xmlModernizationPaver;
 
-	private Class<T> representedInterface;
+	private Class<T> clazz;
 	private Map<String,String> abbrevationMap;
-	private Map<String,String> elongationMap;
 	private String classAbbreviation;
-	@SuppressWarnings("unchecked")
-	public ClassXmlTransformerImpl(Class<T> representedInterface) {
-		this.representedInterface = representedInterface;
-		// TODO figure how to incorporate class-specific modernizers
-		this.xmlModernizationPaver = new XmlModernizationPaverImpl(this, 1, new Hashtable<Modernizer,Modernizer>());
+	
+	public ClassXmlTransformerImpl(Class<T> representedInterface, XmlModernizationPaver<T> xmlModernizationPaver)
+	{
+		this.clazz = representedInterface;
+		this.xmlModernizationPaver = xmlModernizationPaver;
 		this.abbrevationMap = createAbbreviationMap(
 			representedInterface, 
-			ReflectionTools.getPropertiesOfGetters(representedInterface));
-		this.elongationMap = Transform.reverseMap(abbrevationMap);
+			Filter.grepUnique(ReflectionTools.getPropertiesOfGetters(representedInterface)));
 		this.classAbbreviation = abbreviate(
 			representedInterface,
 			representedInterface.getSimpleName().toLowerCase());
-	}
-	
-	public ClassXmlTransformerImpl(XmlModernizationPaver<T> memberXmlModernizationPaver) {
-		this.xmlModernizationPaver = memberXmlModernizationPaver;
+		
 	}
 	
 	public Class<T> getRespresentedInterface() {
-		return representedInterface;
+		return clazz;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public PropertiesAccessor getPropertiesAccessor(final Object instance) {	
 		return propertiesAccessorForPropertySetter;					
 	}
-	private final PropertiesAccessorForPropertySetter propertiesAccessorForPropertySetter = new PropertiesAccessorForPropertySetter(representedInterface) {
+	private final PropertiesAccessorForPropertySetter propertiesAccessorForPropertySetter = new PropertiesAccessorForPropertySetter(clazz) {
 		public Object get(String propertyName, Object instance) {
-			return getCurrentXmlVersion();
+			return getCurrentXmlVersion(); // ignore the stored version; we always deserialize to the newest.
 		}
 		public void set(final String propertyName, final Object instance, final Object value) {
 			if (propertyName.equals("blobVersion"))
-				((PropertySetter)instance).set("storedBlobVersion", value);
+				((Blobbable)instance).setBlobVersion((Integer)value);
 		}
 	};	  
 	
@@ -93,7 +89,7 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 
 		Abbreviation abbreviation = representedInterface.getSimpleName().toLowerCase().equals(name)
 			? representedInterface.getAnnotation(Abbreviation.class)
-			: ReflectionTools.getGetterOfProperty(representedInterface, name).getAnnotation(Abbreviation.class);
+			: getAbbreviationOfMethod(representedInterface, name);
 		if (abbreviation != null)
 			return abbreviation.value();
 		String camelized = name.replaceAll("[^A-Z]","");
@@ -103,16 +99,25 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 			? name.substring(0,4)
 			: name;
 	}
+
+	private Abbreviation getAbbreviationOfMethod(Class<?> representedInterface, String name) {
+		Method methodOfOwner = ReflectionTools.getGetterOfProperty(
+			ReflectionTools.getOwnerOfMethod(representedInterface, name),
+			name);
+		return methodOfOwner.getAnnotation(Abbreviation.class);
+	}
 	
-	@SuppressWarnings("unchecked")
 	public T createInstance() {
-		return (T) new GenerateInstance<T>(representedInterface).generate();
+		return clazz.isInterface()
+			? GeneratedInstanceInterceptor.newInstance(clazz)
+			: ReflectionTools.carefreeConstructor(clazz);
 	}
 
 	public T wrapInSerializingImplementation(T instance) {
+		((Blobbable)instance).setBlobVersion(getCurrentXmlVersion());
 		if (instance instanceof PropertySetter)
 			return instance;
-		return (T) new GenerateInstance<T>(representedInterface).generateAndCopyProperties(instance);
+		return (T) new GenerateInstance<T>(clazz).generateAndCopyProperties(instance);
 	}
 
 	public Collection<ClassXmlTransformer> getRequiredTransformers() {

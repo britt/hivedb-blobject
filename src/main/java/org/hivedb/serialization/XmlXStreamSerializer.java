@@ -1,11 +1,14 @@
 package org.hivedb.serialization;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.hivedb.util.GeneratedInstanceInterceptor;
 import org.hivedb.util.PrimitiveUtils;
 import org.hivedb.util.ReflectionTools;
 import org.hivedb.util.functional.Filter;
@@ -22,30 +25,40 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
-
 public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	Class<RAW> representedInterface;
 	
 	XStream xStream;
-	Map<Class<?>, ClassXmlTransformer> classXmlTransformerMap;
-	@SuppressWarnings("unchecked")
+	Map<Class<?>, ClassXmlTransformer<?>> classXmlTransformerMap;
 	public XmlXStreamSerializer(final Class<?> representedInterface)
+	{
+		this(representedInterface, new Hashtable<Class<?>, XmlModernizationPaver<?>>());
+	}
+	@SuppressWarnings("unchecked")
+	public XmlXStreamSerializer(final Class<?> representedInterface, final Map<Class<?>, XmlModernizationPaver<?>> xmlModernizationPaverMap)
 	{
 		this.representedInterface = (Class<RAW>) representedInterface;
 		Collection<Class<?>> propertyTypes = ReflectionTools.getUniqueComplexPropertyTypes(Collections.singletonList(representedInterface));
 		classXmlTransformerMap = Transform.toMap(
 				new IdentityFunction<Class<?>>(),
-				new Unary<Class<?>, ClassXmlTransformer>() {
-					public ClassXmlTransformer f(Class<?> propertyType ) {
-						return new ClassXmlTransformerImpl(representedInterface);
+				new Unary<Class<?>, ClassXmlTransformer<?>>() {
+					public ClassXmlTransformer<?> f(Class<?> propertyType ) {
+						final Class whichIsImplemented = ReflectionTools.whichIsImplemented(
+								propertyType,
+								(Collection<Class>) xmlModernizationPaverMap.keySet());
+						return new ClassXmlTransformerImpl(
+								propertyType, 
+								whichIsImplemented != null
+									? xmlModernizationPaverMap.get(whichIsImplemented)
+									: XmlModernizationPaverImpl.getDefaultXmlModernizationPaver());
 				}},
 				propertyTypes);
 		
 		this.xStream = new XStream();
-		for (ClassXmlTransformer<Object> classXmlTransformer : classXmlTransformerMap.values()) {
+		for (ClassXmlTransformer<?> classXmlTransformer : classXmlTransformerMap.values()) {
 			xStream.registerConverter(new ClassConverter(classXmlTransformer));
-			Object instancePrototype = classXmlTransformer.createInstance();
-			xStream.alias(classXmlTransformer.getClassAbbreviation(), instancePrototype.getClass());
+			Class generatedClass = GeneratedInstanceInterceptor.getGeneratedClass(classXmlTransformer.getRespresentedInterface());
+			xStream.alias(classXmlTransformer.getClassAbbreviation(), generatedClass);
 		}
 	}
 	
@@ -65,13 +78,14 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	}
 	@SuppressWarnings("unchecked")
 	public RAW deserialize(InputStream serial) {
-		return (RAW)xStream.fromXML(Compression.decompress(serial));
+		final String decompress = Compression.decompress(serial);
+		return (RAW)xStream.fromXML(decompress);
 	}
 	
 	public class ClassConverter implements Converter {    
 
-		private ClassXmlTransformer<Object> classXmlTransformer;
-		public ClassConverter(ClassXmlTransformer<Object> classXmlTransformer) {
+		private ClassXmlTransformer classXmlTransformer;
+		public ClassConverter(ClassXmlTransformer classXmlTransformer) {
 			this.classXmlTransformer = classXmlTransformer;
 		}
 		
@@ -83,8 +97,8 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 
 		@SuppressWarnings("unchecked")
 		private void marshalAttributes(Object source, HierarchicalStreamWriter writer) {
-	       	final Class<Object> respresentedInterface = classXmlTransformer.getRespresentedInterface();
-			for (String propertyName : ReflectionTools.getPropertiesOfPrimitiveGetters(respresentedInterface))
+	       	final Class<?> respresentedInterface = classXmlTransformer.getRespresentedInterface();
+			for (String propertyName : Filter.grepUnique(ReflectionTools.getPropertiesOfPrimitiveGetters(respresentedInterface)))
 	       	{		
 	       		Object value = ReflectionTools.invokeGetter(source, propertyName);
 	       		Class<?> fieldClass = ReflectionTools.getPropertyType(respresentedInterface, propertyName);
@@ -102,8 +116,8 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 		
 		@SuppressWarnings("unchecked")
 		private void marshalNodes(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-		 	final Class<Object> respresentedInterface = classXmlTransformer.getRespresentedInterface();
-		 	for (String propertyName : ReflectionTools.getPropertiesOfComplexGetters(respresentedInterface))
+		 	final Class<?> respresentedInterface = classXmlTransformer.getRespresentedInterface();
+		 	for (String propertyName : Filter.grepUnique(ReflectionTools.getPropertiesOfComplexGetters(respresentedInterface)))
 	       	{		
 	       		Object value = ReflectionTools.invokeGetter(source, propertyName);
 	       		if (new NullOrEmptyRejector().filter(value)) {
@@ -117,9 +131,9 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 	    	Object instance = classXmlTransformer.createInstance();
 	    	
-	    	Integer xmlVersion = seekXmlVersion(reader, context, classXmlTransformer);
+	    	Integer xmlVersion = seekXmlVersion(reader, context, (ClassXmlTransformer<Object>) classXmlTransformer);
 			UnmarshallInterceptor<Object> unmarshallInterceptor = new UnmarshalModernizer<Object>(
-	    			classXmlTransformer.getModernizer(xmlVersion, classXmlTransformer.getCurrentXmlVersion()));
+	    			(Modernizer<Object>) classXmlTransformer.getModernizer(xmlVersion, classXmlTransformer.getCurrentXmlVersion()));
 	    	
 	    	unmarshalAttributes(reader, instance, unmarshallInterceptor);		 
 	    	unmarshalNodes(reader, context, instance, unmarshallInterceptor);	
@@ -131,7 +145,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 		private void unmarshalAttributes(HierarchicalStreamReader reader, Object instance, UnmarshallInterceptor<Object> unmarshalInterceptor) {
 			Iterator iterator = reader.getAttributeNames();
 			
-			final Class<Object> respresentedInterface = classXmlTransformer.getRespresentedInterface();
+			final Class<?> respresentedInterface = classXmlTransformer.getRespresentedInterface();
 			Map<String,String> abbreviatedNameToPropertyName = Transform.toMap(
 				new Unary<String,String>() {
 					public String f(String propertyName) {
@@ -196,8 +210,11 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 				// propertyName will match fullNodeName unless the interceptor changes it
 				String propertyName = unmarshalInterceptor.preUnmarshalElementNameTransformer(fullNodeName);
 				
-		    	Class fieldClass = classXmlTransformer.wrapInSerializingImplementation(instance).getClass();
-		    
+		    	Class fieldClass = ReflectionTools.isCollectionProperty(
+		    			respresentedInterface, 
+		    			propertyName)
+		    		? ArrayList.class
+		    		: ReflectionTools.getPropertyType(representedInterface, propertyName);
 		    	ReflectionTools.invokeSetter(
 		    			instance,
 		    			propertyName,
@@ -208,8 +225,8 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	    	}
 		}
 
+		final String BLOB_VERSION_ATTRIBUTE_ABREVIATION = Blobbable.BLOB_VERSION_ABBREVIATION;
 	    private Integer seekXmlVersion(HierarchicalStreamReader reader, UnmarshallingContext context, ClassXmlTransformer<Object> classXmlTransformer) {
-			String BLOB_VERSION_ATTRIBUTE_ABREVIATION = "bv";
 			
 	    	String version = reader.getAttribute(BLOB_VERSION_ATTRIBUTE_ABREVIATION);
 	    	if (version != null)
@@ -217,7 +234,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	    	else
 	    		version = (String) context.get(BLOB_VERSION_ATTRIBUTE_ABREVIATION);
 	    	if (version == null)
-	    		throw new RuntimeException("No version found in XML or MarshallingContext");
+	    		throw new RuntimeException("No XML blob version found in XML or MarshallingContext");
 	    	SingleValueConverterWrapper converter = getAttributeConverter(Integer.class);
 	    	return (Integer) converter.fromString(version);
 		}
@@ -227,7 +244,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 		}
 	    
 		public boolean canConvert(Class type) {
-	    	return PrimitiveUtils.isPrimitiveClass(type)
+	    	return !PrimitiveUtils.isPrimitiveClass(type)
 	    	  && ReflectionTools.doesImplementOrExtend(
     				type,
     				this.classXmlTransformer.getRespresentedInterface());
@@ -297,8 +314,5 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 			return value != null 
 				&& !(ReflectionTools.doesImplementOrExtend(value.getClass(), Collection.class) && ((Collection)value).size()==0);
 		}		
-	}
-	public Class<RAW> getRepresentedInterface() {
-		return representedInterface;
 	}
 }

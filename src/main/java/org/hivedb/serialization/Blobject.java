@@ -14,4 +14,12 @@ public class Blobject implements Blobbable {
 	public void setBlob(Blob blob) {
 		this.blob = blob;
 	}
+	
+	private Integer blobVersion;
+	public Integer getBlobVersion() {
+		return blobVersion;
+	}
+	public void setBlobVersion(Integer blobVersion) {
+		this.blobVersion = blobVersion;
+	}
 }

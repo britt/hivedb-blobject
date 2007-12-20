@@ -1,6 +1,7 @@
 package org.hivedb.serialization;
 
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -223,6 +224,14 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 		    				context.convertAnother(instance,fieldClass)));
 		    	reader.moveUp();
 	    	}
+			// Initialize missing collections to empty, null is inappropriate
+			for (Method getter: ReflectionTools.getCollectionGetters(respresentedInterface))
+				try {
+					if (getter.invoke(instance, new Object[] {}) == null)
+						GeneratedInstanceInterceptor.setProperty(instance, ReflectionTools.getPropertyNameOfAccessor(getter), new ArrayList());
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
 		}
 
 		final String BLOB_VERSION_ATTRIBUTE_ABREVIATION = Blobbable.BLOB_VERSION_ABBREVIATION;

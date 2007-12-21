@@ -4,7 +4,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ *  Utility converters
+ * @author alikuski@cafepress.com
+ *
+ */
 public class Converters {
+	/**
+	 * Converts an inputStream to a byte array
+	 * @param inputStream
+	 * @return
+	 */
 	public static byte[] getBytes(InputStream inputStream) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
 		byte[] buffer = new byte[1024];

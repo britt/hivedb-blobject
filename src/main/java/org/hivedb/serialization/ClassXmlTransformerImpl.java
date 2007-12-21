@@ -3,14 +3,11 @@
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.hivedb.util.GenerateInstance;
 import org.hivedb.util.GeneratedInstanceInterceptor;
-import org.hivedb.util.PropertiesAccessor;
-import org.hivedb.util.PropertiesAccessorForPropertySetter;
 import org.hivedb.util.PropertySetter;
 import org.hivedb.util.ReflectionTools;
 import org.hivedb.util.functional.Filter;
@@ -18,6 +15,8 @@ import org.hivedb.util.functional.Pair;
 import org.hivedb.util.functional.Transform;
 import org.hivedb.util.functional.Unary;
 import org.hivedb.util.functional.Transform.MapToValueFunction;
+import org.hivedb.versioning.Modernizer;
+import org.hivedb.versioning.XmlModernizationPaver;
 
 public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 
@@ -43,20 +42,6 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 	public Class<T> getRespresentedInterface() {
 		return clazz;
 	}
-	
-	@SuppressWarnings("unchecked")
-	public PropertiesAccessor getPropertiesAccessor(final Object instance) {	
-		return propertiesAccessorForPropertySetter;					
-	}
-	private final PropertiesAccessorForPropertySetter propertiesAccessorForPropertySetter = new PropertiesAccessorForPropertySetter(clazz) {
-		public Object get(String propertyName, Object instance) {
-			return getCurrentXmlVersion(); // ignore the stored version; we always deserialize to the newest.
-		}
-		public void set(final String propertyName, final Object instance, final Object value) {
-			if (propertyName.equals("blobVersion"))
-				((Blobbable)instance).setBlobVersion((Integer)value);
-		}
-	};	  
 	
 	public final String abbreviate(String propertyName) {
 		return abbrevationMap.get(propertyName);

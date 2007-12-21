@@ -1,20 +1,15 @@
 package org.hivedb.serialization;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
-import org.hivedb.hibernate.BaseDataAccessObject;
-import org.hivedb.hibernate.ConfigurationReader;
-import org.hivedb.services.BaseClassDaoService;
-import org.hivedb.services.ClassDaoService;
-import org.hivedb.util.ReflectionTools;
 import org.hivedb.util.database.test.ClassDaoServiceTest;
-import org.hivedb.util.functional.Delay;
-import org.hivedb.util.functional.Unary;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+/**
+ * Demonstrates persistence of a class to hivedb via Hibernate using blobs as the primary form
+ * of storage.
+ * @author bcrawford@cafepress.com
+ *
+ */
 public class BlobjectDaoServiceTest extends ClassDaoServiceTest {
 
 	@Override

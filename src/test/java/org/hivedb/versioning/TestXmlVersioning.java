@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import org.hivedb.serialization.Serializer;
 import org.hivedb.serialization.SerializerFactory;
-import org.hivedb.serialization.XmlModernizationPaver;
 import org.hivedb.serialization.XmlXStreamSerializer;
 import org.hivedb.util.GenerateInstance;
 import org.hivedb.util.ReflectionTools;

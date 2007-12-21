@@ -3,9 +3,14 @@ package org.hivedb.serialization;
 import java.util.Collection;
 
 import org.hivedb.util.PropertiesAccessor;
+import org.hivedb.versioning.Modernizer;
 
-// Describes how to translate between a class and XML, namely what should be attributes, what should be XML,
-// and encapsulates a call to a instance's getter and setter for the relative field
+/**
+ * Describes how to translate between a class instance and XML. This interface is used as the configuration
+ * by a Serializer implementation.
+ * 
+ * @author alikuski@cafepress.com
+ */ 
 public interface ClassXmlTransformer<T> {
 	/**
 	 *  Returns the current version of the XML blob for this class. XML retrieved of o
@@ -13,8 +18,6 @@ public interface ClassXmlTransformer<T> {
 	 */
 	Integer getCurrentXmlVersion();
 
-	PropertiesAccessor getPropertiesAccessor(final Object instance);
-	
 	String abbreviate(String propertyName);
 	String getClassAbbreviation();
 	/**

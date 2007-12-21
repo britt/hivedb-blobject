@@ -8,6 +8,11 @@ import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * Compresses and decompresses between XML and a GZipped InputStream
+ * @author alikuski@cafepress.com
+ *
+ */
 public class Compression {
 	public static InputStream compress(String xml) {
 		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xml.getBytes());

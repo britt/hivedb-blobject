@@ -10,10 +10,16 @@ import java.util.Collection;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.property.Setter;
-import org.hivedb.util.PropertySetter;
 import org.hivedb.util.ReflectionTools;
 import org.springframework.beans.BeanUtils;
 
+/**
+ * Implements Hibernate's Setter interface to deserialize blob persisted by Hibernate 
+ * back to an instance of the owning class.
+ *
+ * @author bcrawford@cafepress.com
+ *
+ */
 public class BlobSetter implements Setter {
 	private static final long serialVersionUID = 1;
 

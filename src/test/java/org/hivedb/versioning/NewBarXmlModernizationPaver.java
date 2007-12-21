@@ -5,8 +5,6 @@ package org.hivedb.versioning;
 
 import java.util.Map;
 
-import org.hivedb.serialization.Modernizer;
-import org.hivedb.serialization.XmlModernizationPaverImpl;
 import org.hivedb.util.functional.Pair;
 import org.hivedb.util.functional.Transform;
 

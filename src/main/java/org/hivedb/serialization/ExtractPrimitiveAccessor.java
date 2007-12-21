@@ -18,6 +18,16 @@ import org.hivedb.util.functional.Atom;
 import org.hivedb.util.functional.Transform;
 import org.hivedb.util.functional.Unary;
 
+/***
+ * When persisting a class as an XML blob, we may still wish index the Ids of one of it's properties
+ * that is a one-to-many collection of instances. 
+ * This PropertyAccessor allows us to declare a collection of instances as a bag of
+ * primitives in the Hibernate declaration, when in reality the blob class has a collection of 
+ * instances. ExtractPrimitiveAccessor extracts the Id from each instance of the collection and
+ * returns the collection of Ids, which Hibernate in turn persists in an association table. See tests.
+ * @author andylikuski
+ *
+ */
 public class ExtractPrimitiveAccessor implements PropertyAccessor {
 
 	public Getter getGetter(Class clazz, final String propertyName)

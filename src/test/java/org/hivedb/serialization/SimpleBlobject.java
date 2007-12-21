@@ -9,6 +9,12 @@ import org.hivedb.annotations.PartitionIndex;
 import org.hivedb.annotations.Resource;
 import org.hivedb.util.HiveUtils;
 
+/**
+ * Demonstrates a class persisted as a blob. Also demonstrates storing a collection class (Foo)
+ * as an index table in Hibernate while storing the full instances as part of the blob.
+ * @author andylikuski
+ *
+ */
 @Resource("Blobject")
 public class SimpleBlobject extends Blobject {
 	private Integer id;

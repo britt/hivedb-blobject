@@ -14,12 +14,12 @@ import org.hibernate.engine.SessionImplementor;
 import org.hibernate.property.Getter;
 import org.hivedb.util.Converters;
 
-
+/**
+ * Implements Hibernate's Getter interface to convert an instance into a SerialBlob instance
+ * for persistence as a blob by Hibernate
+ */
 public class BlobGetter implements Getter {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 7192532599957992415L;
 
 	public Object get(Object owner) throws HibernateException {

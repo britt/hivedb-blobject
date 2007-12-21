@@ -4,15 +4,19 @@ import java.sql.Blob;
 
 import org.hivedb.annotations.Ignore;
 
+/**
+ * 
+ * Default implementation of Blobbable. Note that the blob property is never accessed.
+ * @author bcrawford@cafepress.com
+ *
+ */
 public class Blobject implements Blobbable {
-	protected Blob blob;
 
 	@Ignore
 	public Blob getBlob() {
-		return blob;
+		return null;
 	}
 	public void setBlob(Blob blob) {
-		this.blob = blob;
 	}
 	
 	private Integer blobVersion;

@@ -2,7 +2,6 @@ package org.hivedb.serialization;
 
 import java.util.Collection;
 
-import org.hivedb.util.PropertiesAccessor;
 import org.hivedb.versioning.Modernizer;
 
 /**

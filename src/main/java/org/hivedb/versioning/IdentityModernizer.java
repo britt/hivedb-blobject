@@ -5,7 +5,7 @@ package org.hivedb.versioning;
 
 /**
  *  The default Modernizer that does nothing.
- * @author andylikuski
+ * @author alikuski@cafepress.com
  *
  * @param <T>
  */

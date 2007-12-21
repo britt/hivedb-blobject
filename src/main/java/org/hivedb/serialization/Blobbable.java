@@ -23,7 +23,6 @@ public interface Blobbable {
 	public final String BLOB_VERSION_ABBREVIATION = "bv";
 	@Ignore
 	Blob getBlob();
-	void setBlob(Blob blob);
 	
 	@EntityVersion
 	@Abbreviation(BLOB_VERSION_ABBREVIATION)

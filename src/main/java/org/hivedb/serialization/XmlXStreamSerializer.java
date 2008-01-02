@@ -39,7 +39,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	private Class<RAW> representedInterface;
 	private XStream xStream;
-	private Map<Class<?>, ClassXmlTransformer<?>> classXmlTransformerMap;
+	private Map<Class, ClassXmlTransformer<?>> classXmlTransformerMap;
 	
 	/**
 	 * Constructs a serializer for the given interface. The implementation of the interface
@@ -64,11 +64,11 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	public XmlXStreamSerializer(final Class<?> clazz, final Map<Class<?>, XmlModernizationPaver<?>> xmlModernizationPaverMap)
 	{
 		this.representedInterface = (Class<RAW>) clazz;
-		Collection<Class<?>> propertyTypes = ReflectionTools.getUniqueComplexPropertyTypes(Collections.singletonList(clazz));
+		Collection<Class> propertyTypes = (Collection<Class>) ReflectionTools.getUniqueComplexPropertyTypes(Collections.singletonList(clazz));
 		classXmlTransformerMap = Transform.toMap(
-				new IdentityFunction<Class<?>>(),
-				new Unary<Class<?>, ClassXmlTransformer<?>>() {
-					public ClassXmlTransformer<?> f(Class<?> propertyType ) {
+				new IdentityFunction<Class>(),
+				new Unary<Class, ClassXmlTransformer<?>>() {
+					public ClassXmlTransformer<?> f(Class propertyType ) {
 						final Class whichIsImplemented = ReflectionTools.whichIsImplemented(
 								propertyType,
 								(Collection<Class>) xmlModernizationPaverMap.keySet());
@@ -119,8 +119,8 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	
 	private ClassXmlTransformer resolveClassXmlTransformer(final Object instance) {
 		return classXmlTransformerMap.get(
-			Filter.grepSingle(new Predicate<Class<?>>() {
-				public boolean f(Class<?> classXmlClass) {
+			Filter.grepSingle(new Predicate<Class>() {
+				public boolean f(Class classXmlClass) {
 					return ReflectionTools.doesImplementOrExtend(instance.getClass(), classXmlClass);
 				}},
 				classXmlTransformerMap.keySet()));

@@ -1,12 +1,15 @@
 package org.hivedb.serialization;
 
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Collection;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.property.Setter;
@@ -22,7 +25,7 @@ import org.springframework.beans.BeanUtils;
  */
 public class BlobSetter implements Setter {
 	private static final long serialVersionUID = 1;
-
+	private Log log = LogFactory.getLog(BlobSetter.class);
 	public Method getMethod() {
 		// optional method @see hibernate docs
 		return null;
@@ -38,6 +41,7 @@ public class BlobSetter implements Setter {
 		InputStream stream;
 		try {
 			stream = ((Blob) value).getBinaryStream();
+			log.debug(stream);
 		} catch (SQLException e) {
 			throw new HibernateException(e);
 		}

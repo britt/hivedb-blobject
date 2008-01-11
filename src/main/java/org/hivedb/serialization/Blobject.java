@@ -10,7 +10,8 @@ import org.hivedb.annotations.Ignore;
  * @author bcrawford@cafepress.com
  *
  */
-public class Blobject implements Blobbable {
+public class Blobject implements Blobbable{
+	private Blob blob;
 
 	@Ignore
 	public Blob getBlob() {

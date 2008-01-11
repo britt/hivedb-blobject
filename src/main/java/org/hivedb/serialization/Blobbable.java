@@ -2,6 +2,7 @@ package org.hivedb.serialization;
 
 import java.sql.Blob;
 
+import org.apache.cxf.aegis.type.java5.IgnoreProperty;
 import org.hivedb.annotations.EntityVersion;
 import org.hivedb.annotations.Ignore;
 
@@ -21,6 +22,7 @@ import org.hivedb.annotations.Ignore;
  */
 public interface Blobbable {
 	public final String BLOB_VERSION_ABBREVIATION = "bv";
+	@IgnoreProperty
 	@Ignore
 	Blob getBlob();
 	

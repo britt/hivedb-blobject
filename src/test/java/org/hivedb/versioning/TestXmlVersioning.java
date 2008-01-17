@@ -1,19 +1,31 @@
 package org.hivedb.versioning;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.hivedb.serialization.Serializer;
-import org.hivedb.serialization.SerializerFactory;
+import org.hivedb.serialization.XmlXStreamSerializationProvider;
 import org.hivedb.serialization.XmlXStreamSerializer;
 import org.hivedb.util.GenerateInstance;
 import org.hivedb.util.ReflectionTools;
 import org.hivedb.util.functional.Pair;
 import org.hivedb.util.functional.Transform;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class TestXmlVersioning {
+	
+	@BeforeClass
+	public void beforeClass() {
+		XmlXStreamSerializationProvider.initialize(Arrays.asList(new Class[] {NewFoo.class}), 
+				Transform.toMap((Pair<Class<?>, XmlModernizationPaver<?>>[])
+						new Pair[] {
+								new Pair<Class<?>, XmlModernizationPaver<?>>(NewFoo.class, new NewFooXmlModernizationPaver(NewFooXmlModernizationPaver.NEW_FOO_XML_VERSION)),
+								new Pair<Class<?>, XmlModernizationPaver<?>>(NewBar.class, new NewBarXmlModernizationPaver(NewFooXmlModernizationPaver.NEW_FOO_XML_VERSION))
+						}));
+	}
 	
 	@Test
 	public void testBlobVersioning()
@@ -40,8 +52,8 @@ public class TestXmlVersioning {
 		
 		// Reserialize to upgrade the "stored" version to the NewFoo version
 		// When we deserialize, no modernizer should be called, since it's already at the newest version
-		Serializer<NewFoo, InputStream> newFooSerializer = getNewFooSerializer();
-		NewFoo deserializedNewFoo = newFooSerializer.deserialize(
+		Serializer<Object, InputStream> newFooSerializer = getNewFooSerializer();
+		NewFoo deserializedNewFoo = (NewFoo) newFooSerializer.deserialize(
 			newFooSerializer.serialize(newFoo));
 		// upgrade the version of the original to make them equal
 		newFoo.setBlobVersion(NewFooXmlModernizationPaver.NEW_FOO_XML_VERSION);
@@ -52,23 +64,17 @@ public class TestXmlVersioning {
 	{
 		Serializer<OldFoo,InputStream> productSerializer = getOldFooSerializer();
 		InputStream xmlInputStream = productSerializer.serialize(oldFoo);
-		Serializer<? extends NewFoo,InputStream> newFooSerializer = getNewFooSerializer();
+		Serializer<Object,InputStream> newFooSerializer = getNewFooSerializer();
 		return (NewFoo) newFooSerializer.deserialize(xmlInputStream);
 	}
 
 	private Serializer<OldFoo,InputStream> getOldFooSerializer() {
-		return SerializerFactory.createInstance(
+		return new XmlXStreamSerializer<OldFoo>(
 				OldFoo.class, 
-				Transform.toMap((Pair<Class<?>, XmlModernizationPaver<?>>[])
-						new Pair[] {}));
+				Transform.toMap((Pair<Class<?>, XmlModernizationPaver<?>>[])new Pair[] {}));
 	}
-
-	private Serializer<NewFoo,InputStream> getNewFooSerializer() {
-		return SerializerFactory.createInstance(NewFoo.class,
-				Transform.toMap((Pair<Class<?>, XmlModernizationPaver<?>>[])
-						new Pair[] {
-								new Pair<Class<?>, XmlModernizationPaver<?>>(NewFoo.class, new NewFooXmlModernizationPaver(NewFooXmlModernizationPaver.NEW_FOO_XML_VERSION)),
-								new Pair<Class<?>, XmlModernizationPaver<?>>(NewBar.class, new NewBarXmlModernizationPaver(NewFooXmlModernizationPaver.NEW_FOO_XML_VERSION))
-						}));
+	
+	private Serializer<Object,InputStream> getNewFooSerializer() {
+		return XmlXStreamSerializationProvider.getInstance().getSerializer(NewFoo.class);
 	}
 }

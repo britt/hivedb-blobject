@@ -4,12 +4,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Map;
 
 import org.hivedb.util.ReflectionTools;
 import org.hivedb.util.functional.Maps;
 import org.hivedb.util.functional.Transform;
 import org.hivedb.util.functional.Unary;
+import org.hivedb.versioning.XmlModernizationPaver;
 
 /**
  * Uses XStream serializers to provide a repository of class-based serializers.
@@ -25,10 +28,14 @@ public class XmlXStreamSerializationProvider implements SerializationProvider {
 	private XmlXStreamSerializationProvider() {}
 	
 	public static XmlXStreamSerializationProvider initialize(Class...classes){
-		return initialize(Arrays.asList(classes));
+		return initialize(Arrays.asList(classes), new Hashtable<Class<?>, XmlModernizationPaver<?>>());
 	}
 	
 	public static XmlXStreamSerializationProvider initialize(Collection<Class> classes) {
+		return initialize(classes, new Hashtable<Class<?>, XmlModernizationPaver<?>>());
+	}
+	
+	public static XmlXStreamSerializationProvider initialize(Collection<Class> classes, final Map<Class<?>, XmlModernizationPaver<?>> xmlModernizationPaverMap) {
 		XmlXStreamSerializationProvider provider = new XmlXStreamSerializationProvider();
 		
 		provider.serializers = Transform.toMap(
@@ -36,7 +43,7 @@ public class XmlXStreamSerializationProvider implements SerializationProvider {
 				new Unary<Class, XmlXStreamSerializer>(){
 
 					public XmlXStreamSerializer f(Class item) {
-						return new XmlXStreamSerializer(item);
+						return new XmlXStreamSerializer(item, xmlModernizationPaverMap);
 					}},
 				classes);
 		
@@ -79,5 +86,4 @@ public class XmlXStreamSerializationProvider implements SerializationProvider {
 	public Collection<Class> getSerializableInterfaces() {
 		return new ArrayList(serializers.keySet());
 	}
-
 }

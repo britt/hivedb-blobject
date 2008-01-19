@@ -13,6 +13,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.property.Getter;
 import org.hivedb.util.Converters;
+import org.hivedb.util.GeneratedInstanceInterceptor;
 
 /**
  * Implements Hibernate's Getter interface to convert an instance into a SerialBlob instance
@@ -23,7 +24,9 @@ public class BlobGetter implements Getter {
 	private static final long serialVersionUID = 7192532599957992415L;
 
 	public Object get(Object owner) throws HibernateException {
-		InputStream stream = XmlXStreamSerializationProvider.instance().getSerializer(owner.getClass()).serialize(owner);
+		final Serializer<Object, InputStream> serializer = XmlXStreamSerializationProvider.instance().getSerializer(owner.getClass());
+		GeneratedInstanceInterceptor.setProperty(owner, "blobVersion", serializer.getCurrentClassVersion());
+		InputStream stream = serializer.serialize(owner);
 		SerialBlob blob;
 		try {
 			blob = new SerialBlob(Converters.getBytes(stream));

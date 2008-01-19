@@ -30,14 +30,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
- * An XStream implementation of Serializer. Serializes and deserializes between any class
+ * An XStream implementation of Serializer. Serializes and deserializes from the given class
  * and a compressed InputStream of XML. 
  * @author alikuski@cafepress.com
  *
  * @param <RAW>
  */
 public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
-	private Class<RAW> representedInterface;
+	private Class<RAW> clazz;
 	private XStream xStream;
 	private Map<Class<?>, ClassXmlTransformer<?>> classXmlTransformerMap;
 	
@@ -63,7 +63,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	@SuppressWarnings("unchecked")
 	public XmlXStreamSerializer(final Class<?> clazz, final Map<Class<?>, XmlModernizationPaver<?>> xmlModernizationPaverMap)
 	{
-		this.representedInterface = (Class<RAW>) clazz;
+		this.clazz = (Class<RAW>) clazz;
 		Collection<Class<?>> propertyTypes =  ReflectionTools.getUniqueComplexPropertyTypes(Collections.singletonList(clazz));
 		classXmlTransformerMap = Transform.toMap(
 				new IdentityFunction<Class<?>>(),
@@ -259,7 +259,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 		    			respresentedInterface, 
 		    			propertyName)
 		    		? ArrayList.class
-		    		: ReflectionTools.getPropertyType(representedInterface, propertyName);
+		    		: ReflectionTools.getPropertyType(clazz, propertyName);
 		    	ReflectionTools.invokeSetter(
 		    			instance,
 		    			propertyName,
@@ -367,5 +367,8 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 			return value != null 
 				&& !(ReflectionTools.doesImplementOrExtend(value.getClass(), Collection.class) && ((Collection)value).size()==0);
 		}		
+	}
+	public Integer getCurrentClassVersion() {
+		return classXmlTransformerMap.get(clazz).getCurrentXmlVersion();
 	}
 }

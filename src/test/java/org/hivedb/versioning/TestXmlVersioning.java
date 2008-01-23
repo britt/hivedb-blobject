@@ -34,7 +34,7 @@ public class TestXmlVersioning {
 		NewFoo newFoo = serializeAndDeserializeAsNewFoo(foo);
 		Collection<NewBar> newBars = newFoo.getBars();
 		// Make sure our deserialized instance notes that it came from the OldFoo version, not the NewFoo version
-		Assert.assertEquals(newFoo.getBlobVersion(), (Integer)1);
+		Assert.assertEquals(newFoo.getBlobVersion(), (Integer)0);
 		// We deleted the OrientationId from the new XML version so it shouldn't be deserialized
 		Assert.assertEquals(newFoo.getOrientationId(), null);
 		// We deleted Bar.Border also

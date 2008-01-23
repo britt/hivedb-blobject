@@ -43,7 +43,7 @@ public class XmlModernizationPaverImpl<T>  implements XmlModernizationPaver<T> {
 	}
 	
 	public static <T> XmlModernizationPaverImpl<T> getDefaultXmlModernizationPaver() {
-		return new XmlModernizationPaverImpl<T>((Integer)1, new Hashtable<Integer,Modernizer<T>>());
+		return new XmlModernizationPaverImpl<T>((Integer)0, new Hashtable<Integer,Modernizer<T>>());
 	}
 	
 	public Modernizer<T> getModernizer(Integer fromVersion, Integer toVersion) {

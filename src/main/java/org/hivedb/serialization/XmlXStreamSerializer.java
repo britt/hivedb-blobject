@@ -202,12 +202,13 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 			while (iterator.hasNext())
 	    	{
 	    		String abreviatedAttributeName = (String)iterator.next();
+	    		if (unmarshalInterceptor.isElementedDeleted(abreviatedAttributeName))
+	    			continue;
 	    		String updatedAbreviatedAttributeName = unmarshalInterceptor.preUnmarshalAbreviatedElementNameTransformer(abreviatedAttributeName);
-				if (!abbreviatedNameToPropertyName.containsKey(updatedAbreviatedAttributeName))
+	    		if (!abbreviatedNameToPropertyName.containsKey(updatedAbreviatedAttributeName))
 					throw new RuntimeException(String.format("The abreviated attribute name %s is not recognized by the ClassXmlTransformer for %s", updatedAbreviatedAttributeName, respresentedInterface.getName()));
 	    		String fullAttributeName = abbreviatedNameToPropertyName.get(updatedAbreviatedAttributeName);
-	    		if (unmarshalInterceptor.isElementedDeleted(fullAttributeName))
-	    			continue;
+	    		
 	    		// propertyName will match fullAttributeName unless the interceptor changes it
 				String propertyName = unmarshalInterceptor.preUnmarshalElementNameTransformer(
 					fullAttributeName);
@@ -245,6 +246,8 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	    	{
 				reader.moveDown();
 				String abreviatedNodeName = reader.getNodeName();
+				if (unmarshalInterceptor.isElementedDeleted(abreviatedNodeName))
+	    			continue;
 				String updatedAbreviatedNodeName = unmarshalInterceptor.preUnmarshalAbreviatedElementNameTransformer(abreviatedNodeName);
 				if (!abbreviatedNameToPropertyName.containsKey(updatedAbreviatedNodeName))
 					throw new RuntimeException(String.format("The abreviated node name %s is not recognized by the ClassXmlTransformer of %s", updatedAbreviatedNodeName, classXmlTransformer.getRespresentedInterface().getName()));
@@ -313,7 +316,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	{
 		String preUnmarshalAbreviatedElementNameTransformer(String abreviatedElementName);
 		String preUnmarshalElementNameTransformer(String elementName);
-		Boolean isElementedDeleted(String elementName);
+		Boolean isElementedDeleted(String abreviatedElementName);
 		Object postUnmarshalElementValueTransformer(String elementName, Object elementValue);
 		T postUnmarshalInstanceModifier(T instance);
 	}

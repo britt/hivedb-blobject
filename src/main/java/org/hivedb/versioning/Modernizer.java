@@ -24,15 +24,14 @@ public interface Modernizer<T> {
 	 */
 	String getNewElementName(String elementName);
 	/**
-	 *  Returns true if the given attribute or node has been deleted from the new version of the XML.
+	 *  Returns true if the given abbreviated attribute or node has been deleted from the new version of the XML.
 	 *  This will normally occur if the corresponding domain object class property has been deleted.
 	 *  Returning true indicates to the deserializer to not set the corresponding property of the
 	 *  instance being deserialized.
-	 * @param elementName The full name corresponding to the field of the domain class (not the abreviated
-	 * XML name.)
+	 * @param abreviatedElementName The abreviated name corresponding to the field of the domain class.
 	 * @return
 	 */
-	Boolean isDeletedElement(String elementName);
+	Boolean isDeletedElement(String abreviatedElementName);
 	/**
 	 *  Modifies the value of a deserialized attribute or node.
 	 * @param elementName The name corresponding to the field of the domain class (not the abreviated

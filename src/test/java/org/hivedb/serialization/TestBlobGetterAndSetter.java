@@ -17,9 +17,10 @@ import org.testng.annotations.Test;
 
 public class TestBlobGetterAndSetter {
 
+	private XmlXStreamSerializationProvider xmlXStreamSerializationProvider;
 	@BeforeClass
 	public void initializeSerializationProvider() {
-		XmlXStreamSerializationProvider.initialize(Collections.singletonList((Class)SimpleBlobject.class));
+		xmlXStreamSerializationProvider = XmlXStreamSerializationProvider.initialize(Collections.singletonList((Class)SimpleBlobject.class));
 	}
 	
 	@Test

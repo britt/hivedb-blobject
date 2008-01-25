@@ -34,8 +34,8 @@ public class NewBarXmlModernizationPaver extends XmlModernizationPaverImpl<NewBa
 						return "turning";
 					return elementName;
 				}
-				public Boolean isDeletedElement(String elementName) {
-					return elementName.equals("border");
+				public Boolean isDeletedElement(String abreviatedElementName) {
+					return abreviatedElementName.equals("b");
 				}
 				public Object getUpdatedElementValue(String elementName, Object elementValue) {
 					return elementValue;

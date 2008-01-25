@@ -26,8 +26,9 @@ public class Compression {
 	   
 	    byte[] buffer = new byte[1024];
 	    try {
-			while ((byteArrayInputStream.read(buffer)) != -1) {
-				gZipOutputStream.write(buffer);
+	    	int size;
+			while ((size = byteArrayInputStream.read(buffer)) != -1) {
+				gZipOutputStream.write(buffer, 0, size);
 			}
 			gZipOutputStream.finish();
 		} catch (IOException e) {
@@ -49,8 +50,9 @@ public class Compression {
 	    StringBuffer stringBuffer = new StringBuffer();
 	    char[] charBuffer = new char[1024];
 	    try {
-			while ((inputStreamReader.read(charBuffer)) != -1) {
-			  stringBuffer.append(charBuffer);
+	    	int size;
+			while ((size = inputStreamReader.read(charBuffer)) != -1) {
+			  stringBuffer.append(charBuffer, 0, size);
 			}
 		} catch (IOException e) {
 			new RuntimeException(e);

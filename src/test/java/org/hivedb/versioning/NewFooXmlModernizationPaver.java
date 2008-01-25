@@ -37,8 +37,8 @@ public class NewFooXmlModernizationPaver extends XmlModernizationPaverImpl<NewFo
 						return "defaultThumbnail";
 					return elementName;
 				}
-				public Boolean isDeletedElement(String elementName) {
-					return elementName.equals("orientationId");
+				public Boolean isDeletedElement(String abreviatedElementName) {
+					return abreviatedElementName.equals("o");
 				}
 				public Object getUpdatedElementValue(String elementName, Object elementValue) {
 					if ("active".equals(elementName))

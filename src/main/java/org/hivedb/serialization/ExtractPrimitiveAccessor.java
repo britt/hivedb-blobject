@@ -1,7 +1,9 @@
 package org.hivedb.serialization;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 import org.hibernate.HibernateException;
@@ -38,7 +40,7 @@ public class ExtractPrimitiveAccessor implements PropertyAccessor {
 		return new Getter() {
 		
 			public Object get(Object instance) throws HibernateException {
-				Collection collection = (Collection) ReflectionTools.invokeGetter(instance, propertyName);
+				Collection<Object> collection = (Collection<Object>) ReflectionTools.invokeGetter(instance, propertyName);
 				
 				return Transform.map(new Unary<Object, Object>() {
 					public Object f(Object item) {
@@ -48,7 +50,7 @@ public class ExtractPrimitiveAccessor implements PropertyAccessor {
 							throw new RuntimeException(e);
 						}
 					}
-				}, collection);
+				}, collection != null ? collection : Collections.emptyList());
 			}
 
 			public Object getForInsert(Object arg0, Map arg1,

@@ -202,31 +202,32 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 			while (iterator.hasNext())
 	    	{
 	    		String abreviatedAttributeName = (String)iterator.next();
-	    		if (unmarshalInterceptor.isElementedDeleted(abreviatedAttributeName))
-	    			continue;
-	    		String updatedAbreviatedAttributeName = unmarshalInterceptor.preUnmarshalAbreviatedElementNameTransformer(abreviatedAttributeName);
-	    		if (!abbreviatedNameToPropertyName.containsKey(updatedAbreviatedAttributeName))
-					throw new RuntimeException(String.format("The abreviated attribute name %s is not recognized by the ClassXmlTransformer for %s", updatedAbreviatedAttributeName, respresentedInterface.getName()));
-	    		String fullAttributeName = abbreviatedNameToPropertyName.get(updatedAbreviatedAttributeName);
-	    		
-	    		// propertyName will match fullAttributeName unless the interceptor changes it
-				String propertyName = unmarshalInterceptor.preUnmarshalElementNameTransformer(
-					fullAttributeName);
-	    		
-	    		// Assume attributes are simple converters
-	    		SingleValueConverterWrapper converter = getAttributeConverter(
-	    				ReflectionTools.getPropertyType(respresentedInterface, propertyName));
-	    		try {
-	    			ReflectionTools.invokeSetter(
-	    				instance, 
-	    				propertyName,
-	    				unmarshalInterceptor.postUnmarshalElementValueTransformer(
-	    					propertyName,
-	    					converter.fromString(
-	    							reader.getAttribute(abreviatedAttributeName))));
-	    		}
-	    		catch (Exception e) {
-	    			throw new RuntimeException(String.format("Error unmarshalling attribute %s of class %s", abreviatedAttributeName, instance.getClass().getSimpleName()), e);
+	    		if (!unmarshalInterceptor.isElementedDeleted(abreviatedAttributeName)) {
+		    			
+		    		String updatedAbreviatedAttributeName = unmarshalInterceptor.preUnmarshalAbreviatedElementNameTransformer(abreviatedAttributeName);
+		    		if (!abbreviatedNameToPropertyName.containsKey(updatedAbreviatedAttributeName))
+						throw new RuntimeException(String.format("The abreviated attribute name %s is not recognized by the ClassXmlTransformer for %s", updatedAbreviatedAttributeName, respresentedInterface.getName()));
+		    		String fullAttributeName = abbreviatedNameToPropertyName.get(updatedAbreviatedAttributeName);
+		    		
+		    		// propertyName will match fullAttributeName unless the interceptor changes it
+					String propertyName = unmarshalInterceptor.preUnmarshalElementNameTransformer(
+						fullAttributeName);
+		    		
+		    		// Assume attributes are simple converters
+		    		SingleValueConverterWrapper converter = getAttributeConverter(
+		    				ReflectionTools.getPropertyType(respresentedInterface, propertyName));
+		    		try {
+		    			ReflectionTools.invokeSetter(
+		    				instance, 
+		    				propertyName,
+		    				unmarshalInterceptor.postUnmarshalElementValueTransformer(
+		    					propertyName,
+		    					converter.fromString(
+		    							reader.getAttribute(abreviatedAttributeName))));
+		    		}
+		    		catch (Exception e) {
+		    			throw new RuntimeException(String.format("Error unmarshalling attribute %s of class %s", abreviatedAttributeName, instance.getClass().getSimpleName()), e);
+		    		}
 	    		}
 	    	}
 		}
@@ -246,29 +247,27 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	    	{
 				reader.moveDown();
 				String abreviatedNodeName = reader.getNodeName();
-				if (unmarshalInterceptor.isElementedDeleted(abreviatedNodeName))
-	    			continue;
-				String updatedAbreviatedNodeName = unmarshalInterceptor.preUnmarshalAbreviatedElementNameTransformer(abreviatedNodeName);
-				if (!abbreviatedNameToPropertyName.containsKey(updatedAbreviatedNodeName))
-					throw new RuntimeException(String.format("The abreviated node name %s is not recognized by the ClassXmlTransformer of %s", updatedAbreviatedNodeName, classXmlTransformer.getRespresentedInterface().getName()));
-	    		
-				String fullNodeName = abbreviatedNameToPropertyName.get(updatedAbreviatedNodeName);
-				if (unmarshalInterceptor.isElementedDeleted(fullNodeName))
-	    			continue;
-				// propertyName will match fullNodeName unless the interceptor changes it
-				String propertyName = unmarshalInterceptor.preUnmarshalElementNameTransformer(fullNodeName);
-				
-		    	Class fieldClass = ReflectionTools.isCollectionProperty(
-		    			respresentedInterface, 
-		    			propertyName)
-		    		? ArrayList.class
-		    		: ReflectionTools.getPropertyType(clazz, propertyName);
-		    	ReflectionTools.invokeSetter(
-		    			instance,
-		    			propertyName,
-		    			unmarshalInterceptor.postUnmarshalElementValueTransformer(
-		    				propertyName,
-		    				context.convertAnother(instance,fieldClass)));
+				if (!unmarshalInterceptor.isElementedDeleted(abreviatedNodeName)) {	
+					String updatedAbreviatedNodeName = unmarshalInterceptor.preUnmarshalAbreviatedElementNameTransformer(abreviatedNodeName);
+					if (!abbreviatedNameToPropertyName.containsKey(updatedAbreviatedNodeName))
+						throw new RuntimeException(String.format("The abreviated node name %s is not recognized by the ClassXmlTransformer of %s", updatedAbreviatedNodeName, classXmlTransformer.getRespresentedInterface().getName()));
+		    		
+					String fullNodeName = abbreviatedNameToPropertyName.get(updatedAbreviatedNodeName);
+					// propertyName will match fullNodeName unless the interceptor changes it
+					String propertyName = unmarshalInterceptor.preUnmarshalElementNameTransformer(fullNodeName);
+					
+			    	Class fieldClass = ReflectionTools.isCollectionProperty(
+			    			respresentedInterface, 
+			    			propertyName)
+			    		? ArrayList.class
+			    		: ReflectionTools.getPropertyType(clazz, propertyName);
+			    	ReflectionTools.invokeSetter(
+			    			instance,
+			    			propertyName,
+			    			unmarshalInterceptor.postUnmarshalElementValueTransformer(
+			    				propertyName,
+			    				context.convertAnother(instance,fieldClass)));
+				}
 		    	reader.moveUp();
 	    	}
 			// Initialize missing collections to empty, null is inappropriate

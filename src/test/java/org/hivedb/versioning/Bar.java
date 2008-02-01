@@ -1,22 +1,22 @@
 package org.hivedb.versioning;
 
 import org.hivedb.annotations.Index;
-import org.hivedb.serialization.Abbreviation;
+import org.hivedb.serialization.Abreviation;
 
 public interface Bar {
 	@Index
-	@Abbreviation("i")
+	@Abreviation("i")
 	Integer getId();
-	@Abbreviation("a")
+	@Abreviation("a")
 	Short getAlignment();
-	@Abbreviation("p")
+	@Abreviation("p")
 	Short getPosition();
-	@Abbreviation("h")
+	@Abreviation("h")
 	Float getHeight();
-	@Abbreviation("r")
+	@Abreviation("r")
 	Integer getRotation();
-	@Abbreviation("b")
+	@Abreviation("b")
 	Float getBorder();
-	@Abbreviation("k")
+	@Abreviation("k")
 	String getKey();
 }

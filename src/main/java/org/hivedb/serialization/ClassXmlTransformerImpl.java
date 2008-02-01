@@ -72,8 +72,8 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 				
 	private String abbreviate(Class<?> representedInterface, String name) {
 
-		Abbreviation abbreviation = representedInterface.getSimpleName().toLowerCase().equals(name)
-			? representedInterface.getAnnotation(Abbreviation.class)
+		Abreviation abbreviation = representedInterface.getSimpleName().toLowerCase().equals(name)
+			? representedInterface.getAnnotation(Abreviation.class)
 			: getAbbreviationOfMethod(representedInterface, name);
 		if (abbreviation != null)
 			return abbreviation.value();
@@ -85,11 +85,11 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 			: name;
 	}
 
-	private Abbreviation getAbbreviationOfMethod(Class<?> representedInterface, String name) {
+	private Abreviation getAbbreviationOfMethod(Class<?> representedInterface, String name) {
 		Method methodOfOwner = ReflectionTools.getGetterOfProperty(
 			ReflectionTools.getOwnerOfMethod(representedInterface, name),
 			name);
-		return methodOfOwner.getAnnotation(Abbreviation.class);
+		return methodOfOwner.getAnnotation(Abreviation.class);
 	}
 	
 	public T createInstance() {

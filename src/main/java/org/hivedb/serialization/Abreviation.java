@@ -4,11 +4,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /***
- *  Abbreviates a class or property name for efficient serialization.
+ *  Abreviates a class or property name for efficient serialization.
  * @author alikuski@cafepress.com
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Abbreviation {
+public @interface Abreviation {
 	String value();
 }

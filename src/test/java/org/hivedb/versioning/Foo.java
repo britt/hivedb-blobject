@@ -4,38 +4,38 @@ import java.util.Collection;
 
 import org.hivedb.annotations.EntityId;
 import org.hivedb.annotations.PartitionIndex;
-import org.hivedb.serialization.Abbreviation;
+import org.hivedb.serialization.Abreviation;
 import org.hivedb.serialization.Blobbable;
 
 public interface Foo extends Blobbable {
 	@EntityId
-	@Abbreviation("i")
+	@Abreviation("i")
 	Long getId();
 	void setId(Long id);
 	
 	@PartitionIndex("Member")
-	@Abbreviation("mb")
+	@Abreviation("mb")
 	Integer getMemberId();
 	void setMemberId(Integer memberId);
 	
-	@Abbreviation("rv")
+	@Abreviation("rv")
 	Short getRevision();
 	void setRevision(Short revision);
 	
-	@Abbreviation("a")
+	@Abreviation("a")
 	Boolean getActive();
 	void setActive(Boolean active);
 	
 	
-	@Abbreviation("cl")
+	@Abreviation("cl")
 	Collection<Integer> getColors();
 	void setColors(Collection<Integer> colors);
 
-	@Abbreviation("o")
+	@Abreviation("o")
 	Integer getOrientationId();
 	void setOrientationId(Integer orientationId);
 	
-	@Abbreviation("dt")
+	@Abreviation("dt")
 	Integer getDefaultTN();
 	void setDefaultTN(Integer defaultTN);
 }

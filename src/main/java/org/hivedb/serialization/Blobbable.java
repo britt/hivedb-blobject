@@ -27,7 +27,7 @@ public interface Blobbable {
 	Blob getBlob();
 	
 	@EntityVersion
-	@Abreviation(BLOB_VERSION_ABBREVIATION)
+	@Abbreviation(BLOB_VERSION_ABBREVIATION)
 	@Ignore
 	Integer getBlobVersion();
 	void setBlobVersion(Integer blobVersion);

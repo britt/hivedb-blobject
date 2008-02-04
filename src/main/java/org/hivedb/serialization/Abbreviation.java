@@ -9,6 +9,6 @@ import java.lang.annotation.RetentionPolicy;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Abreviation {
+public @interface Abbreviation {
 	String value();
 }

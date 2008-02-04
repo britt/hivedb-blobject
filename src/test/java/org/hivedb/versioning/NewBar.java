@@ -4,15 +4,15 @@
 package org.hivedb.versioning;
 
 import org.hivedb.annotations.GeneratedClass;
-import org.hivedb.serialization.Abreviation;
+import org.hivedb.serialization.Abbreviation;
 
 @GeneratedClass("NewBarImpl")
-@Abreviation("b")
+@Abbreviation("b")
 public interface NewBar extends Bar {
 	
 	// We are renaming the field Rotation to Turning, and thus changing the
 	// name of the XML attribute
-	@Abreviation("tn")
+	@Abbreviation("tn")
 	Integer getTurning();
 	void setTurning(Integer value);
 	

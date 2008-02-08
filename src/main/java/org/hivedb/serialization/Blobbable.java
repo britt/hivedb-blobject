@@ -24,6 +24,7 @@ public interface Blobbable {
 	public final String BLOB_VERSION_ABBREVIATION = "bv";
 	@IgnoreProperty
 	@Ignore
+	@SerializerIgnore
 	Blob getBlob();
 	
 	@EntityVersion

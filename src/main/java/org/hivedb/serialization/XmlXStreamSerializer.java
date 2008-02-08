@@ -9,6 +9,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.hivedb.annotations.AnnotationHelper;
+import org.hivedb.annotations.Ignore;
 import org.hivedb.util.GeneratedInstanceInterceptor;
 import org.hivedb.util.PrimitiveUtils;
 import org.hivedb.util.ReflectionTools;
@@ -98,7 +100,8 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	@SuppressWarnings("unchecked")
 	public InputStream serialize(final RAW raw) {	
 		RAW objectToSerialize = (RAW) resolveClassXmlTransformer(raw).wrapInSerializingImplementation(raw);
-		return Compression.compress(xStream.toXML(objectToSerialize));
+		final String xml = xStream.toXML(objectToSerialize);
+		return Compression.compress(xml);
 	}
 	
 	/**
@@ -143,7 +146,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 		@SuppressWarnings("unchecked")
 		private void marshalAttributes(Object source, HierarchicalStreamWriter writer) {
 	       	final Class<?> respresentedInterface = classXmlTransformer.getRespresentedInterface();
-			for (String propertyName : Filter.grepUnique(ReflectionTools.getPropertiesOfPrimitiveGetters(respresentedInterface)))
+			for (String propertyName : grepNotIgnored(respresentedInterface, Filter.grepUnique(ReflectionTools.getPropertiesOfPrimitiveGetters(respresentedInterface))))
 	       	{		
 	       		Object value = ReflectionTools.invokeGetter(source, propertyName);
 	       		Class<?> fieldClass = ReflectionTools.getPropertyType(respresentedInterface, propertyName);
@@ -162,7 +165,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 		@SuppressWarnings("unchecked")
 		private void marshalNodes(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
 		 	final Class<?> respresentedInterface = classXmlTransformer.getRespresentedInterface();
-		 	for (String propertyName : Filter.grepUnique(ReflectionTools.getPropertiesOfComplexGetters(respresentedInterface)))
+		 	for (String propertyName : grepNotIgnored(respresentedInterface, Filter.grepUnique(ReflectionTools.getPropertiesOfComplexGetters(respresentedInterface))))
 	       	{		
 	       		Object value = ReflectionTools.invokeGetter(source, propertyName);
 	       		if (new NullOrEmptyRejector().filter(value)) {
@@ -173,7 +176,15 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	       	}
 		}
 								
-	    public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+	    private Collection<String> grepNotIgnored(final Class<?> respresentedInterface, Collection<String> collection) {
+			return Filter.grep(new Predicate<String>() {
+				public boolean f(String propertyName) {
+					return AnnotationHelper.getAnnotationDeeply(respresentedInterface, propertyName, SerializerIgnore.class) == null;
+				}
+			}, collection);
+		}
+
+		public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
 	    	Object instance = classXmlTransformer.createInstance();
 	    	
 	    	Integer xmlVersion = seekXmlVersion(reader, context, (ClassXmlTransformer<Object>) classXmlTransformer);

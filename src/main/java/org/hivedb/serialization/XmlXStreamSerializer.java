@@ -152,9 +152,10 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	       		Class<?> fieldClass = ReflectionTools.getPropertyType(respresentedInterface, propertyName);
 	       		if (value != null)
 	       			try {
-	       				writer.addAttribute(
-	       					classXmlTransformer.abbreviate(propertyName),
-	       					((SingleValueConverterWrapper)xStream.getConverterLookup().lookupConverterForType(fieldClass)).toString(value));
+	       				String attributeValue = (propertyName.equals(BLOB_VERSION_ATTRIBUTE_ABREVIATION))
+	       					? classXmlTransformer.getCurrentXmlVersion().toString()
+	       					: ((SingleValueConverterWrapper)xStream.getConverterLookup().lookupConverterForType(fieldClass)).toString(value);
+	       				writer.addAttribute(classXmlTransformer.abbreviate(propertyName), attributeValue);
 	       			}
 	       			catch (Exception e) {
 	       				throw new RuntimeException(e);

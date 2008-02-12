@@ -13,6 +13,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.property.Setter;
+import org.hivedb.annotations.AnnotationHelper;
 import org.hivedb.util.ReflectionTools;
 import org.springframework.beans.BeanUtils;
 
@@ -53,7 +54,8 @@ public class BlobSetter implements Setter {
 		if (clazz == null)
 			throw new RuntimeException(String.format("Could not find a serializable interface matching defrosted class %s", defrosted.getClass()));
 		for(Method get : ReflectionTools.getGetters(clazz)) {
-			if(get.getDeclaringClass().equals(Object.class))
+			if(get.getDeclaringClass().equals(Object.class)
+				|| AnnotationHelper.getAnnotationDeeply(clazz, ReflectionTools.getPropertyNameOfAccessor(get), SerializerIgnore.class) != null)
 				continue;
 			Object propertyValue;
 			try {

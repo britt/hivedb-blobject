@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory
+        name="java:hibernate/SessionFactory">
+		<property name="dbcp.maxActive">32</property>
+        <property name="dbcp.maxIdle">2</property>
+        <property name="dbcp.maxWait">500</property>
+        <property name="dbcp.whenExhaustedAction">1</property>
+        <property name="dbcp.testOnBorrow">false</property>
+        <property name="dbcp.testOnReturn">true</property>
+        <property name="dbcp.validationQuery">
+            select count(1) from information_schema.tables limit 1;
+        </property>
+        
+        <property name="dbcp.ps.maxActive">0</property>
+        <property name="dbcp.ps.maxIdle">0</property>
+        <property name="dbcp.ps.maxWait">-1</property>
+        <property name="dbcp.ps.whenExhaustedAction">2</property>
+	 <!--   <property name="hibernate.show_sql">true</property> -->
+    </session-factory>
+</hibernate-configuration>

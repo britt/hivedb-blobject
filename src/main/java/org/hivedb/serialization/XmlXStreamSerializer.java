@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.hivedb.annotations.AnnotationHelper;
-import org.hivedb.annotations.Ignore;
 import org.hivedb.util.GeneratedInstanceInterceptor;
 import org.hivedb.util.PrimitiveUtils;
 import org.hivedb.util.ReflectionTools;
@@ -180,7 +179,8 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 	    private Collection<String> grepNotIgnored(final Class<?> respresentedInterface, Collection<String> collection) {
 			return Filter.grep(new Predicate<String>() {
 				public boolean f(String propertyName) {
-					return AnnotationHelper.getAnnotationDeeply(respresentedInterface, propertyName, SerializerIgnore.class) == null;
+					return ReflectionTools.getPropertyType(respresentedInterface, propertyName) != Class.class &&
+						AnnotationHelper.getAnnotationDeeply(respresentedInterface, propertyName, SerializerIgnore.class) == null;
 				}
 			}, collection);
 		}

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.hivedb.annotations.AnnotationHelper;
 import org.hivedb.util.GenerateInstance;
 import org.hivedb.util.GeneratedInstanceInterceptor;
 import org.hivedb.util.PropertySetter;
@@ -86,10 +87,7 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 	}
 
 	private Abbreviation getAbbreviationOfMethod(Class<?> representedInterface, String name) {
-		Method methodOfOwner = ReflectionTools.getGetterOfProperty(
-			ReflectionTools.getOwnerOfMethod(representedInterface, name),
-			name);
-		return methodOfOwner.getAnnotation(Abbreviation.class);
+		return AnnotationHelper.getAnnotationDeeply(representedInterface, name, Abbreviation.class);
 	}
 	
 	public T createInstance() {

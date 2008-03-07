@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.hivedb.annotations.AnnotationHelper;
+import org.hivedb.util.GeneratedClassFactory;
 import org.hivedb.util.GeneratedInstanceInterceptor;
 import org.hivedb.util.PrimitiveUtils;
 import org.hivedb.util.ReflectionTools;
@@ -85,7 +86,7 @@ public class XmlXStreamSerializer<RAW> implements Serializer<RAW, InputStream> {
 		this.xStream = new XStream();
 		for (ClassXmlTransformer<?> classXmlTransformer : classXmlTransformerMap.values()) {
 			xStream.registerConverter(new ClassConverter(classXmlTransformer));
-			Class generatedClass = GeneratedInstanceInterceptor.getGeneratedClass(classXmlTransformer.getRespresentedInterface());
+			Class generatedClass = GeneratedClassFactory.getGeneratedClass(classXmlTransformer.getRespresentedInterface());
 			xStream.alias(classXmlTransformer.getClassAbbreviation(), generatedClass);
 		}
 	}

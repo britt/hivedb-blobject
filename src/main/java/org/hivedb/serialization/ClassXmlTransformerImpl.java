@@ -1,5 +1,6 @@
   package org.hivedb.serialization;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.hivedb.annotations.AnnotationHelper;
 import org.hivedb.util.GenerateInstance;
+import org.hivedb.util.GeneratedClassFactory;
 import org.hivedb.util.GeneratedInstanceInterceptor;
 import org.hivedb.util.PropertySetter;
 import org.hivedb.util.ReflectionTools;
@@ -91,9 +93,13 @@ public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 	}
 	
 	public T createInstance() {
-		return clazz.isInterface()
-			? GeneratedInstanceInterceptor.newInstance(clazz)
-			: ReflectionTools.carefreeConstructor(clazz);
+		try {
+			return clazz.isInterface()
+				? GeneratedClassFactory.newInstance(clazz)
+				: clazz.getConstructor().newInstance();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public T wrapInSerializingImplementation(T instance) {

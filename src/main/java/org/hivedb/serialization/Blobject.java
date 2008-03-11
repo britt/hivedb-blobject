@@ -2,7 +2,7 @@ package org.hivedb.serialization;
 
 import java.sql.Blob;
 
-import org.hivedb.annotations.Ignore;
+import org.hivedb.annotations.GeneratorIgnore;
 
 /**
  * 
@@ -13,7 +13,7 @@ import org.hivedb.annotations.Ignore;
 public class Blobject implements Blobbable{
 	private Blob blob;
 
-	@Ignore
+	@GeneratorIgnore
 	public Blob getBlob() {
 		return null;
 	}

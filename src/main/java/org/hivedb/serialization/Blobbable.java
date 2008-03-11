@@ -4,7 +4,7 @@ import java.sql.Blob;
 
 import org.apache.cxf.aegis.type.java5.IgnoreProperty;
 import org.hivedb.annotations.EntityVersion;
-import org.hivedb.annotations.Ignore;
+import org.hivedb.annotations.GeneratorIgnore;
 
 /***
  *  Used in conjunction with BlobAccessor to enable blob serialization of a class via Hibernate.
@@ -23,13 +23,13 @@ import org.hivedb.annotations.Ignore;
 public interface Blobbable {
 	public final String BLOB_VERSION_ABBREVIATION = "bv";
 	@IgnoreProperty
-	@Ignore
+	@GeneratorIgnore
 	@SerializerIgnore
 	Blob getBlob();
 	
 	@EntityVersion
 	@Abbreviation(BLOB_VERSION_ABBREVIATION)
-	@Ignore
+	@GeneratorIgnore
 	Integer getBlobVersion();
 	void setBlobVersion(Integer blobVersion);
 }

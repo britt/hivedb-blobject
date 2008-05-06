@@ -4,7 +4,7 @@
   <groupId>org.hivedb</groupId>
   <artifactId>blobject</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>blobject</name>
   <url>http://maven.apache.org</url>
   <distributionManagement>
@@ -18,7 +18,7 @@
     <dependency>
       <groupId>org.hivedb</groupId>
       <artifactId>hivedb</artifactId>
-      <version>0.9.4</version>
+      <version>0.9.4-SNAPSHOT</version>
     </dependency>
     <dependency>
 		<groupId>hibernate</groupId>
@@ -28,14 +28,6 @@
   </dependencies>
   <build>
   	<finalName>blobject</finalName>
-    <!--
-    <testResources>
-      <testResource>
-      	<targetPath>org/hivedb/serialization</targetPath>
-        <directory>src/test/java/org/hivedb/serialization</directory>
-      </testResource>
-    </testResources>
-    -->
   	<plugins>
   	 <plugin>
         <groupId>org.apache.maven.plugins</groupId>

@@ -8,17 +8,15 @@ import org.hivedb.Schema;
 import org.hivedb.meta.persistence.TableInfo;
 
 public class SimpleBlobjectSchema extends Schema {
-
-	public SimpleBlobjectSchema(){
+	
+	private static SimpleBlobjectSchema INSTANCE = new SimpleBlobjectSchema();
+	
+	private SimpleBlobjectSchema(){
 		super("blobject");
 	}
 
-	public SimpleBlobjectSchema(String dbURI) {
-		super("blobject",dbURI);
-	}
-
 	@Override
-	public Collection<TableInfo> getTables() {
+	public Collection<TableInfo> getTables(String uri) {
 		return Arrays.asList(
 			new TableInfo(
 				"BLOBJECT", 
@@ -36,6 +34,10 @@ public class SimpleBlobjectSchema extends Schema {
 					"ID INT NOT NULL, " + 
 					"FOO_ID INT NOT NULL);")
 		);
+	}
+	
+	public static SimpleBlobjectSchema getInstance() {
+		return INSTANCE;
 	}
 
 }

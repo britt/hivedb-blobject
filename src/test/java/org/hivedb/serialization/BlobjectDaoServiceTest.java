@@ -17,7 +17,7 @@ public class BlobjectDaoServiceTest extends ClassDaoServiceTest {
 	public void initializeDataProvider() {
 		
 		XmlXStreamSerializationProvider.initialize(SimpleBlobject.class);
-		addEntity(SimpleBlobject.class, new SimpleBlobjectSchema(getConnectString(getHiveDatabaseName())));
+		addEntity(SimpleBlobject.class, SimpleBlobjectSchema.getInstance());
 	}
 	
 	@Test

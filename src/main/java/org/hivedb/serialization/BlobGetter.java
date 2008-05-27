@@ -13,7 +13,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.property.Getter;
 import org.hivedb.util.Converters;
-import org.hivedb.util.GeneratedInstanceInterceptor;
+import org.hivedb.util.classgen.GeneratedInstanceInterceptor;
 
 /**
  * Implements Hibernate's Getter interface to convert an instance into a SerialBlob instance

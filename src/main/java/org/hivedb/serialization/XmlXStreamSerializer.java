@@ -10,8 +10,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.hivedb.annotations.AnnotationHelper;
-import org.hivedb.util.GeneratedClassFactory;
-import org.hivedb.util.GeneratedInstanceInterceptor;
+import org.hivedb.util.classgen.GeneratedClassFactory;
+import org.hivedb.util.classgen.GeneratedInstanceInterceptor;
 import org.hivedb.util.PrimitiveUtils;
 import org.hivedb.util.ReflectionTools;
 import org.hivedb.util.functional.Filter;

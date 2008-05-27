@@ -7,7 +7,7 @@ import java.util.Collection;
 import org.hivedb.serialization.Serializer;
 import org.hivedb.serialization.XmlXStreamSerializationProvider;
 import org.hivedb.serialization.XmlXStreamSerializer;
-import org.hivedb.util.GenerateInstance;
+import org.hivedb.util.classgen.GenerateInstance;
 import org.hivedb.util.ReflectionTools;
 import org.hivedb.util.functional.Pair;
 import org.hivedb.util.functional.Transform;

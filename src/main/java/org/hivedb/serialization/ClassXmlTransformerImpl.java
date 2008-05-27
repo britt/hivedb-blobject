@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.hivedb.annotations.AnnotationHelper;
-import org.hivedb.util.GenerateInstance;
-import org.hivedb.util.GeneratedClassFactory;
-import org.hivedb.util.GeneratedImplementation;
+import org.hivedb.util.classgen.GenerateInstance;
+import org.hivedb.util.classgen.GeneratedClassFactory;
+import org.hivedb.util.classgen.GeneratedImplementation;
 import org.hivedb.util.ReflectionTools;
 import org.hivedb.util.functional.Filter;
 import org.hivedb.util.functional.Pair;

@@ -9,9 +9,7 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.util.Collections;
 
-import org.hivedb.util.GenerateInstance;
-import org.hivedb.util.database.test.WeatherReport;
-import org.hivedb.util.database.test.WeatherReportImpl;
+import org.hivedb.util.classgen.GenerateInstance;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

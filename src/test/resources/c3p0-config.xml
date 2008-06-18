@@ -1,0 +1,26 @@
+<c3p0-config>
+	
+	<default-config>
+		<property name="testConnectionOnCheckout">true</property>
+		<property name="minPoolSize">6</property>
+		<property name="initialPoolSize">6</property>
+		<property name="maxPoolSize">30</property>
+		<property name="maxIdleTime">3600</property>
+		<property name="acquireRetryAttempts">60</property>
+		<property name="idleConnectionTestPeriod">360</property>
+	</default-config> 
+	
+	<!-- sample named config incl. user-overrides
+	
+	<named-config name="intergalactoApp">
+		<property name="testConnectionOnCheckout">true</property>
+		</user-overrides user="master-of-the-universe">
+		<property name="maxStatementsPerConnection">50</property>
+		</user-overrides>
+	</named-config>
+	
+	see hibernate.cfg.xml for hibernate-specific c3p0 settings
+	
+	-->
+	
+</c3p0-config>

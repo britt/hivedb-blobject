@@ -1,28 +1,5 @@
 package org.hivedb.serialization;
 
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-
-import org.hivedb.annotations.AnnotationHelper;
-import org.hivedb.util.classgen.GeneratedClassFactory;
-import org.hivedb.util.classgen.GeneratedInstanceInterceptor;
-import org.hivedb.util.PrimitiveUtils;
-import org.hivedb.util.ReflectionTools;
-import org.hivedb.util.functional.Filter;
-import org.hivedb.util.functional.Predicate;
-import org.hivedb.util.functional.Transform;
-import org.hivedb.util.functional.Unary;
-import org.hivedb.util.functional.Transform.IdentityFunction;
-import org.hivedb.versioning.Modernizer;
-import org.hivedb.versioning.XmlModernizationPaver;
-import org.hivedb.versioning.XmlModernizationPaverImpl;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
@@ -30,6 +7,23 @@ import com.thoughtworks.xstream.converters.SingleValueConverterWrapper;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import org.hivedb.annotations.AnnotationHelper;
+import org.hivedb.util.PrimitiveUtils;
+import org.hivedb.util.classgen.GeneratedClassFactory;
+import org.hivedb.util.classgen.GeneratedInstanceInterceptor;
+import org.hivedb.util.classgen.ReflectionTools;
+import org.hivedb.util.functional.Filter;
+import org.hivedb.util.functional.Predicate;
+import org.hivedb.util.functional.Transform;
+import org.hivedb.util.functional.Transform.IdentityFunction;
+import org.hivedb.util.functional.Unary;
+import org.hivedb.versioning.Modernizer;
+import org.hivedb.versioning.XmlModernizationPaver;
+import org.hivedb.versioning.XmlModernizationPaverImpl;
+
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * An XStream implementation of Serializer. Serializes and deserializes from the given class

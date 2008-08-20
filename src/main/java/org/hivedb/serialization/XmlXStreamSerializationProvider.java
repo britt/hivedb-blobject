@@ -1,18 +1,13 @@
 package org.hivedb.serialization;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Map;
-
-import org.hivedb.util.ReflectionTools;
+import org.hivedb.util.classgen.ReflectionTools;
 import org.hivedb.util.functional.Maps;
 import org.hivedb.util.functional.Transform;
 import org.hivedb.util.functional.Unary;
 import org.hivedb.versioning.XmlModernizationPaver;
+
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * Uses XStream serializers to provide a repository of class-based serializers.

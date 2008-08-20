@@ -1,15 +1,10 @@
 package org.hivedb.versioning;
 
+import org.hivedb.util.functional.*;
+
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
-
-import org.hivedb.util.functional.Amass;
-import org.hivedb.util.functional.Filter;
-import org.hivedb.util.functional.Joiner;
-import org.hivedb.util.functional.NumberIterator;
-import org.hivedb.util.functional.Predicate;
-import org.hivedb.util.functional.Transform;
 
 /**
  * The default implementation of XmlModernizationPaver. This class creates an aggregate Modernizer

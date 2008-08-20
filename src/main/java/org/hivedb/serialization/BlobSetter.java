@@ -1,21 +1,20 @@
 package org.hivedb.serialization;
 
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.Collection;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.property.Setter;
 import org.hivedb.annotations.AnnotationHelper;
-import org.hivedb.util.ReflectionTools;
+import org.hivedb.util.classgen.ReflectionTools;
 import org.springframework.beans.BeanUtils;
+
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.Collection;
 
 /**
  * Implements Hibernate's Setter interface to deserialize blob persisted by Hibernate 

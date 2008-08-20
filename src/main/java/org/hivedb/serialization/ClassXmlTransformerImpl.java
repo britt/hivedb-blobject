@@ -1,22 +1,22 @@
   package org.hivedb.serialization;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Map.Entry;
+  import org.hivedb.annotations.AnnotationHelper;
+  import org.hivedb.util.classgen.GenerateInstance;
+  import org.hivedb.util.classgen.GeneratedClassFactory;
+  import org.hivedb.util.classgen.GeneratedImplementation;
+  import org.hivedb.util.classgen.ReflectionTools;
+  import org.hivedb.util.functional.Filter;
+  import org.hivedb.util.functional.Pair;
+  import org.hivedb.util.functional.Transform;
+  import org.hivedb.util.functional.Transform.MapToValueFunction;
+  import org.hivedb.util.functional.Unary;
+  import org.hivedb.versioning.Modernizer;
+  import org.hivedb.versioning.XmlModernizationPaver;
 
-import org.hivedb.annotations.AnnotationHelper;
-import org.hivedb.util.classgen.GenerateInstance;
-import org.hivedb.util.classgen.GeneratedClassFactory;
-import org.hivedb.util.classgen.GeneratedImplementation;
-import org.hivedb.util.ReflectionTools;
-import org.hivedb.util.functional.Filter;
-import org.hivedb.util.functional.Pair;
-import org.hivedb.util.functional.Transform;
-import org.hivedb.util.functional.Unary;
-import org.hivedb.util.functional.Transform.MapToValueFunction;
-import org.hivedb.versioning.Modernizer;
-import org.hivedb.versioning.XmlModernizationPaver;
+  import java.util.ArrayList;
+  import java.util.Collection;
+  import java.util.Map;
+  import java.util.Map.Entry;
 
 public class ClassXmlTransformerImpl<T> implements ClassXmlTransformer<T> {
 

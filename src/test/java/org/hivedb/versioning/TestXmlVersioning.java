@@ -1,19 +1,19 @@
 package org.hivedb.versioning;
 
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.hivedb.serialization.Serializer;
 import org.hivedb.serialization.XmlXStreamSerializationProvider;
 import org.hivedb.serialization.XmlXStreamSerializer;
 import org.hivedb.util.classgen.GenerateInstance;
-import org.hivedb.util.ReflectionTools;
+import org.hivedb.util.classgen.ReflectionTools;
 import org.hivedb.util.functional.Pair;
 import org.hivedb.util.functional.Transform;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class TestXmlVersioning {
 	

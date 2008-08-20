@@ -1,11 +1,5 @@
 package org.hivedb.serialization;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-
 import org.hibernate.HibernateException;
 import org.hibernate.PropertyNotFoundException;
 import org.hibernate.engine.SessionFactoryImplementor;
@@ -15,10 +9,15 @@ import org.hibernate.property.PropertyAccessor;
 import org.hibernate.property.Setter;
 import org.hivedb.annotations.AnnotationHelper;
 import org.hivedb.annotations.Index;
-import org.hivedb.util.ReflectionTools;
+import org.hivedb.util.classgen.ReflectionTools;
 import org.hivedb.util.functional.Atom;
 import org.hivedb.util.functional.Transform;
 import org.hivedb.util.functional.Unary;
+
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 /***
  * When persisting a class as an XML blob, we may still wish index the Ids of one of it's properties
